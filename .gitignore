@@ -1,11 +1,2 @@
-build/bin/Release/core
-build/roguelike.make
-build/bin/Release/roguelike
-**.d
-**.o
-build/*
-vgcore**
-build/roguelike.make
-.vscode/launch.json
-**core**
-build/**
+/target
+**/*.rs.bk
