@@ -7,6 +7,7 @@ use std::error::Error;
 use std::fs::OpenOptions;
 use std::path::Path;
 use std::env;
+use std::process::exit;
 
 fn write_in_file(file_name: String, content: String) {
     let mut file = OpenOptions::new()
@@ -30,7 +31,7 @@ fn generate_map(file: String, seed: i32, size: i32) {
         for j in 0..size {
             let x = i as f64 / 10.0;
             let y = j as f64 / 10.0;
-            let z = seed as f64 / 10.0;
+            let z = seed as f64 / 1000.0;
             let value = (perlin.get([x, y, z])).abs();
 
             line.push(parser(value));
@@ -55,23 +56,24 @@ fn main() {
 
     let args: Vec<String> = env::args().collect();
 
-    println!("{:?}", args);
-
-    println!("\n  *****************************");
-    println!("  -===== Level Generator =====-");
-    println!("  *****************************\n");
     /*
-    println!("Enter file path, seed and size : ");
+        Args list:
+        0 - path
+        1 - file path
+        2 - seed
+        3 - size
+    */
 
-    let mut file = String::new();
-    let mut seed = String::new();
-    let mut size = String::new();
+    if args.len() != 4 {
+        println!("Not enought arguments : \n Usage: <command> <file.txt> <seed (from 1 to 999)> <size>");
+        exit(1);
+    }
 
-    std::io::stdin().read_line(&mut file).expect("Could not read line");
-    std::io::stdin().read_line(&mut seed).expect("Could not read line");
-    std::io::stdin().read_line(&mut size).expect("Could not read line");
-    let passed_seed: i32 = seed.trim().parse().expect("Couldn't parse from String to Int");
-    let passed_size: i32 = size.trim().parse().expect("Couldn't parse from String to Int");
+    println!("Created a map : {} with seed : {} and size : {size} * {size}", args[1], args[2], size=args[3]);
 
-    generate_map(file, passed_seed, passed_size);*/
+    let passed_seed: i32 = args[2].trim().parse().expect("Couldn't parse from String to Int");
+    let passed_size: i32 = args[3].trim().parse().expect("Couldn't parse from String to Int");
+    let file = &args[1];
+
+    generate_map(file.to_string(), passed_seed, passed_size);
 }
